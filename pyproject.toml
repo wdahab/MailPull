@@ -1,0 +1,16 @@
+[project]
+name = "mailpull"
+version = "0.1.0"
+description = "Pull Office 365 email matching criteria into Claude-readable Markdown + SQLite"
+requires-python = ">=3.11"
+dependencies = ["O365>=2.1", "rich>=13.0", "html2text>=2024.2.26"]
+
+[project.scripts]
+mailpull = "mailpull.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["mailpull"]

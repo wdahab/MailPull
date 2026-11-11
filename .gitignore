@@ -1,0 +1,15 @@
+# Secrets and personal config — never commit (this repo is public)
+mailpull.toml
+.env
+
+# Downloaded mail
+data/
+*.eml
+
+__pycache__/
+*.pyc
+*.egg-info/
+env/
+.venv/
+.DS_Store
+.claude/settings.local.json

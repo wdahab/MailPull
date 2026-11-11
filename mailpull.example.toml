@@ -1,0 +1,59 @@
+# MailPull configuration.
+# Copy to mailpull.toml (gitignored) and edit. Never commit mailpull.toml —
+# it holds the app secret.
+
+# ── Azure app (the same app registration findaily / rfpdownloader use) ─────
+# Can also come from env vars MAILPULL_CLIENT_ID / MAILPULL_CLIENT_SECRET.
+# If neither is set, ../rfpdownloader/config.py is used as a fallback.
+[azure]
+client_id = ""
+client_secret = ""
+
+[settings]
+# Where downloaded mail goes (relative to the repo, or absolute).
+data_dir = "data"
+# Mailbox used when a pull doesn't name one. Leave unset to use your own.
+# default_mailbox = "you@dahab.com"
+
+# ── Pulls ──────────────────────────────────────────────────────────────────
+# Each [pulls.<name>] is a saved search. Run with `mailpull run <name>`.
+#
+# Every key is optional. All criteria that are set must match (AND);
+# inside a list, any value may match (OR). Text matching is case-insensitive.
+#
+#   mailbox          address of the mailbox to read (yours, or one shared with you)
+#   from             sender address(es) or whole domains: "@acme.com"
+#   to               recipient address/name substring(s), checked in To/Cc/Bcc
+#   subject          subject contains
+#   exclude_subject  subject must not contain
+#   body             body contains (slower: bodies are fetched to check)
+#   search           server-side full-text search, KQL syntax
+#                    e.g. 'budget AND "Q3 forecast"'  (fast across huge mailboxes)
+#   folders          folder names or paths ("Inbox/Clients"); default: all folders
+#   since / until    "YYYY-MM-DD" or relative "30d", "8w", "6m", "1y"; until is exclusive
+#   has_attachments  true / false
+#   attachments      save attachment files (default true)
+#   save_eml         keep the raw .eml (default true)
+#   max_attachment_mb  skip attachments bigger than this (default 25)
+#   limit            at most this many new messages per run, newest first
+#   description      a note for humans (and Claude) about what this pull is for
+
+# The original findaily job, expressed as a pull:
+[pulls.findaily]
+description = "findaily Alert newsletters — institutional investment searches/hires"
+mailbox = "wdahab@dahab.com"
+from = "newsalert@findaily.com"
+folders = ["Inbox", "Archive"]
+attachments = false
+
+# Everything from a client's domain in the last year, with attachments:
+[pulls.acme]
+description = "All correspondence with Acme"
+from = ["@acme.com"]
+since = "1y"
+
+# Full-text search across all folders:
+[pulls.rfp-mentions]
+search = 'RFP AND (pension OR endowment)'
+since = "2025-01-01"
+exclude_subject = ["Out of Office", "Automatic reply"]
